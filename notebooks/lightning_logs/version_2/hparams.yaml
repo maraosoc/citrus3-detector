@@ -1,0 +1,9 @@
+config_args: null
+config_file: deepforest_config.yml
+existing_train_dataloader: null
+existing_val_dataloader: null
+label_dict:
+  Tree: 0
+model: null
+num_classes: 1
+transforms: null
