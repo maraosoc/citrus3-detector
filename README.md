@@ -10,26 +10,33 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 ### 1. Comprensión del Negocio
 
 - **Objetivo**: Automatizar el conteo y localización de árboles cítricos (naranja y limón) a partir de imágenes aéreas.
-- **Motivación**: Reducir tiempos y automatizar el monitoreo de cultivos. Permitir el análisis del terreno y facilitar tareas de inventario agrícola.
+- **Motivación**: Reducir tiempos y automatizar el monitoreo de cultivos. Permitir el análisis del terreno y facilitar tareas de inventario.
 - **Área de análisis**: 93 hectáreas, con presencia mayoritaria de cítricos y elementos adicionales como árboles nativos, viviendas, rocas y caminos.
 
 ---
 
 ### 2. Comprensión de los Datos
 
-- **Fuente**: Imágenes RGB obtenidas mediante un vuelo de dron.
-- **Formato**: Ortofotos georreferenciadas (formato raster, TIFF/GeoTIFF).
+- **Fuente**: Imágenes RGB obtenidas mediante un vuelo de dron, con calibración geométrica y radiométrica. 
+- **Formato**: Ortomosaicos georreferenciados (formato raster, GeoTIFF).
 - **Contenido**:
   - Árboles cítricos (objetivo)
   - Elementos no relevantes para el problema: árboles nativos, casas, caminos, sombras
 - **Cobertura heterogénea**: Requiere filtrado cuidadoso post-inferencia.
-
+> Consulta algunas imagenes de prueba en formato `.tif` en la carpeta [Samples](data/samples)
 ---
 
 ## 🧩 Estrategia de Resolución del Problema
+Se basa en un enfoque de tres fases (inspirado en [Weinstein, B.G.; Marconi, S.; Bohlman, S.; Zare, A.; White, E.P., 2019](https://doi.org/10.3390/rs11111309)):
+- **(1) Fase no supervisada**: Se generan etiquetas suaves por medio de modelos no supervisados sobre las imágenes RGB. (A definir: RGB + elevación)
+- **(2) Fase Auto-supervisada**: Se refinan las predicciones sobreponiendo las etiquetas ruidosas (por ejemplo cuando se tienen varias predicciones de un mismo árbol) y conservando solo las predicciones de alta confianza. Con esto, se entrena un modelo de detección.
+- **(3) Fase supervisada**: Se reentrena el modelo de detección con etiquetas de alta calidad hechas a mano.
+ ![Marco de trabajo propuesto](https://github.com/user-attachments/assets/6d3609dd-2594-4cbe-adea-6a75b289d5a6)
 
 ### 🧠 Tipo de Modelo
-- **Modelo base**: Modelo de detección de árcoles preentrenado y posteriormente ajustado para distinguir clases de árboles.
+
+- **Modelo de detección**: Modelo de detección de árboles preentrenado y posteriormente ajustado para distinguir clases de árboles.
+> Inicialmente se considera usar el de [DeepForest](https://github.com/weecology/DeepForest)
 - **Formato de salida**: Bounding Boxes con clase y probabilidad georreferenciados. 
 
 ---
@@ -37,7 +44,7 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 ### 🏷️ Generación de Etiquetas
 - **Opciones**:
   - Anotar manualmente un subconjunto representativo de parches.
-  - Herramientas posibles: LabelStudio, Qgis.
+  - Herramientas posibles: [LabelStudio](https://github.com/HumanSignal/label-studio/), [Qgis](https://qgis.org/).
 - **Clases a identificar**:
   - `naranja`
   - `limón`
