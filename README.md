@@ -26,29 +26,54 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 > Consulta algunas imagenes de prueba en formato `.tif` en la carpeta [Samples](data/samples)
 ---
 
-## 🧩 Estrategia de Resolución del Problema
-Se basa en un enfoque de tres fases (inspirado en [Weinstein, B.G.; Marconi, S.; Bohlman, S.; Zare, A.; White, E.P., 2019](https://doi.org/10.3390/rs11111309)):
-- **(1) Fase no supervisada**: Se generan etiquetas suaves por medio de modelos no supervisados sobre las imágenes RGB. (A definir: RGB + elevación)
-- **(2) Fase Auto-supervisada**: Se refinan las predicciones sobreponiendo las etiquetas ruidosas (por ejemplo cuando se tienen varias predicciones de un mismo árbol) y conservando solo las predicciones de alta confianza. Con esto, se entrena un modelo de detección.
-- **(3) Fase supervisada**: Se reentrena el modelo de detección con etiquetas de alta calidad hechas a mano.
- ![Marco de trabajo propuesto](https://github.com/user-attachments/assets/6d3609dd-2594-4cbe-adea-6a75b289d5a6)
+## 🧩 Flujo de Modelado Propuesto
+1. **División en parches y extracción de características**
+   - Cada imagen se divide en parches
+   - Para cada parche se calculan estadísticas (histograma de color en RGB/HSV)
+   - *Hiperparámetros*: tamaño del parche, stride (salto entre parches), espacio de color
 
-### 🧠 Tipo de Modelo
+2. **Clustering de características**
+   - Se entrena un modelo KNN con todos los parches de entrenamiento
+   - Se concatenan características (histogramas) para robustez
+   - *Hiperparámetro*: número de clusters
 
-- **Modelo de detección**: Modelo de detección de árboles preentrenado y posteriormente ajustado para distinguir clases de árboles.
-> Inicialmente se considera usar el de [DeepForest](https://github.com/weecology/DeepForest)
-- **Formato de salida**: Bounding Boxes con clase y probabilidad georreferenciados. 
+3. **Selección de clusters relevantes**
+   - Análisis humano de histogramas por cluster
+   - Selección de clusters que representan árboles cítricos
+
+4. **Generación de máscaras**
+   - Nueva división de imágenes en parches
+   - Clasificación con el KNN entrenado
+   - Creación de máscaras binarias seleccionando clusters relevantes
+
+5. **Procesamiento morfológico**
+   - Erosión de máscaras con kernel cruz
+
+6. **Integración con datos de elevación**
+   - Alineación y preprocesado de imagen de elevación:
+     - Suavizado con filtro gaussiano
+     - Detección de elevaciones puntuales (elevación - suavizado)
+     - Filtrado por umbrales (5 opciones para umbral mínimo, máximo constante)
+   - Multiplicación de máscaras por elevación filtrada
+   - Detección de rectángulos y centroides por capa de elevación
+   - *Ventaja*: Reduce influencia de vegetación baja y separa copas superpuestas
+
+7. **Supresión no máxima jerárquica**
+   - Eliminación de duplicados por IoU
+   - Prioridad a capas con mayor umbral de elevación
+   - *Hiperparámetro*: threshold de IoU
+
+8. **Optimización y evaluación**
+   - Ajuste de hiperparámetros con imágenes de validación
+   - Evaluación final con imágenes de test
 
 ---
 
-### 🏷️ Generación de Etiquetas
-- **Opciones**:
-  - Anotar manualmente un subconjunto representativo de parches.
-  - Herramientas posibles: [LabelStudio](https://github.com/HumanSignal/label-studio/), [Qgis](https://qgis.org/).
-- **Clases a identificar**:
-  - `naranja`
-  - `limón`
-  - (Otras clases como árboles nativos se ignoran en esta etapa)
+### 🧠 Ventajas del Enfoque
+
+- **Robustez**: Combinación de características visuales y de elevación
+- **Flexibilidad**: Adaptable a diferentes condiciones de cultivo
+- **Eficiencia**: Procesamiento por etapas para manejo de grandes áreas
 
 ---
 
@@ -63,41 +88,39 @@ Se basa en un enfoque de tres fases (inspirado en [Weinstein, B.G.; Marconi, S.;
 
 ---
 
-### ⚙️ Entorno de Entrenamiento y Desarrollo
+### ⚙️ Entorno de Desarrollo
 - **Lenguaje**: Python 3.10+
 - **Librerías clave**:
-  - `DeepForest`, `torch`, `torchvision` (modelo base y fine-tunning)
-  - `opencv`, `numpy`, `matplotlib` (procesamiento de imagen)
+  - `opencv`, `scikit-image` (procesamiento de imágenes)
+  - `scikit-learn` (KNN y clustering)
   - `geopandas`, `rasterio`, `shapely` (datos geoespaciales)
   - `QGIS` (visualización y análisis espacial)
----
 
-## 📂 Estructura del Proyecto
+---
+## 📂 Estructura Actual del Proyecto
 
 ```bash
 citrus3-detector/
 ├── data/
-│   ├── tiles/              # (A futuro) Mosaicos de la ortofoto generada por el dron para entrenamiento y validacion
-│   ├── samples/            # Parches del ortomosaico como ejemplo y para pruebas
-│   ├── results/            # (A futuro) Resultados de inferencia y conteo
-│   ├── annotations/        # (A futuro) Etiquetas de entrenamiento
-│   └── shapefiles/         # (A futuro) Capas geoespaciales para QGIS
-│
-├── models/
-│   ├── pretrained/         # (A futuro) Modelo de detección de árboles
-│   └── inference/          # (A futuro) Scripts de ejecución
-│
-├── scripts/
-│   ├── preprocess.py       # (A futuro) Procesamiento de imágenes
-│   ├── run_inference.py    # (A futuro) Ejecución del modelo
-│   ├── postprocess.py      # (A futuro) Conteo y filtrado
-│   └── to_qgis.py          # (A futuro) Exportación a shapefile/GeoJSON
+│   ├── samples/            # Imágenes de ejemplo (.tif)
+│   ├── annotations/        # Etiquetas manuales
+│   └── results/            # Resultados de detección
 │
 ├── notebooks/
-│   ├── DeepForest.ipynb       # Pruebas iniciales con el paquete DeepForest
-│   ├── object_detection.ipynb # Pruebas iniciales de carga de etiquetas y detección de árboles
-│   └── lightning_logs         # Resultados de pytorch-lightning logger
+│   ├── 01_Data_Exploration.ipynb
+│   ├── 02_Color_Clustering.ipynb
+│   ├── 03_Elevation_Analysis.ipynb
+│   └── 04_Full_Pipeline.ipynb
 │
-├── requirements.txt (A futuro)
+├── src/
+│   ├── preprocessing.py    # Manejo de imágenes
+│   ├── clustering.py       # Modelo KNN
+│   ├── masking.py          # Generación de máscaras
+│   ├── elevation.py        # Procesamiento DSM
+│   ├── detection.py        # Pipeline completo
+│   └── evaluation.py       # Métricas y visualización
+│
+├── docs/                   # Documentación adicional
+├── requirements.txt        # Dependencias
 └── README.md               # Este documento
 
