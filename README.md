@@ -102,25 +102,33 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 ```bash
 citrus3-detector/
 ├── data/
-│   ├── samples/            # Imágenes de ejemplo (.tif)
-│   ├── annotations/        # Etiquetas manuales
-│   └── results/            # Resultados de detección
-│
+│   ├── database/ # Imagenes que conforman la base de datos, extraidas del ortomosaico
+│   │   ├── databaste_atributes.xlsx # Archivo de excel con datos adicionales sobre las imágenes que conforman del database
+│   │   ├── test/ # Imagenes de prueba a diferentes resoluciones y formatos, en RGB y modelo de elevación
+│   │   │   ├── png_1x res/
+│   │   │   ├── png_4x_res/
+│   │   │   ├── tif_1x_res/
+│   │   │   ├── tif_elev/
+│   │   │   └── tif_x4_res/
+│   │   ├── train/ # Imagenes de entrenamiento a diferentes resoluciones y formatos, en RGB y modelo de elevación
+│   │   │   ├── png_high_res/
+│   │   │   ├── tif_elev/
+│   │   │   ├── tif_high_res/
+│   │   │   └── tif_x4_res/
+│   ├── labels/ # Etiquetas rectangulares hechas en el conjunto de prueba en formato csv y json
+│   ├── results/ # Algunos resultados como segmentaciones, identificación de bounding boxes y filtrado de copas por mapa de elvación
+│   └── samples/ # Imágenes de ejemplo (.tif)
+├── models/ 
+│   └── modelo_rgb.joblib # Modelo k-NN en espacio de color RGB entrenado
 ├── notebooks/
-│   ├── 01_Data_Exploration.ipynb
-│   ├── 02_Color_Clustering.ipynb
-│   ├── 03_Elevation_Analysis.ipynb
-│   └── 04_Full_Pipeline.ipynb
-│
-├── src/
-│   ├── preprocessing.py    # Manejo de imágenes
-│   ├── clustering.py       # Modelo KNN
-│   ├── masking.py          # Generación de máscaras
-│   ├── elevation.py        # Procesamiento DSM
-│   ├── detection.py        # Pipeline completo
-│   └── evaluation.py       # Métricas y visualización
-│
-├── docs/                   # Documentación adicional
+│   ├── Tree_Detection_Validation.ipynb # Ajuste del modelo y métricas
+│   ├── Tree_Detection_Train.ipynb # Entrenamiento del modelo
+│   └── Tree_Detection_Test.ipynb # Métricas de desempeño
+│       └── Testing/ # Notebooks adicionales
+│           ├── EDA_Citrus Elevation.ipynb # Pruebas iniciales de división de parches y exploración del espacio RGB y de elevación
+│           ├── Knn_Segmentation.ipynb # Exploración de las caractaerísticas de color por parches de imágenees de prueba
+│           ├── labeling.ipynb # Tareas asociadas al etiquetado y anpalisis de etiquetas
+│           └── Testing_KNN.ipynb # Pruebas de k-NN con imágenes de prueba en RGB
 ├── requirements.txt        # Dependencias
 └── README.md               # Este documento
 

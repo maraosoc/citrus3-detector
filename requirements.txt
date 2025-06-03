@@ -1,6 +1,9 @@
 numpy
+pandas
+geopandas
 matplotlib
 rasterio
 scipy
 scikit-learn
 opencv-python
+json
