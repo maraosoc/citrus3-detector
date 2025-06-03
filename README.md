@@ -3,6 +3,12 @@
 
 Este proyecto busca automatizar la identificación y conteo de **árboles de naranja y limón** en parcelas agrícolas usando imágenes adquiridas con **drones** y un **modelo de detección de objetos previamente entrenado**. Está desarrollado siguiendo la metodología **CRISP-DM**, y se enfoca en facilitar la toma de decisiones agronómicas aprovechando los desarrollos de la visión por computador.
 
+| Imagen 1                  | Imagen 2                  |
+|---------------------------|---------------------------|
+| ![Descripción1](data/results/batch_4_boxes.png) | ![Descripción2](data/results/batch_4_segmentation.png) |
+| Imagen 3                  | Imagen 4                  |
+| ![Descripción3](data/results/batch_7_boxes.png) | ![Descripción4](data/results/batch_7_segmentation.png) |
+
 ---
 
 ## 🧠 Metodología CRISP-DM
@@ -12,13 +18,15 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 - **Objetivo**: Automatizar el conteo y localización de árboles cítricos (naranja y limón) a partir de imágenes aéreas.
 - **Motivación**: Reducir tiempos y automatizar el monitoreo de cultivos. Permitir el análisis del terreno y facilitar tareas de inventario.
 - **Área de análisis**: 93 hectáreas, con presencia mayoritaria de cítricos y elementos adicionales como árboles nativos, viviendas, rocas y caminos.
-
+  
 ---
 
 ### 2. Comprensión de los Datos
 
 - **Fuente**: Imágenes RGB obtenidas mediante un vuelo de dron, con calibración geométrica y radiométrica. 
 - **Formato**: Ortomosaicos georreferenciados (formato raster, GeoTIFF).
+- **Generación de dataset**: Selección de áreas que cubran la heterogeneidad de las coberturas presentes.
+  ![Diagrama](data/results/tran-test_data_generation.png)
 - **Contenido**:
   - Árboles cítricos (objetivo)
   - Elementos no relevantes para el problema: árboles nativos, casas, caminos, sombras
