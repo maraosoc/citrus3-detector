@@ -3,9 +3,10 @@
 
 Este proyecto busca automatizar la identificación y conteo de **árboles de naranja y limón** en parcelas agrícolas usando imágenes adquiridas con **drones** y un **modelo de detección de objetos previamente entrenado**. Está desarrollado siguiendo la metodología **CRISP-DM**, y se enfoca en facilitar la toma de decisiones agronómicas aprovechando los desarrollos de la visión por computador.
 
-|---------------------------|---------------------------|
-| ![Descripción1](data/results/batch_4_boxes.png) | ![Descripción2](data/results/batch_4_segmentation.png) |
-| ![Descripción3](data/results/batch_7_boxes.png) | ![Descripción4](data/results/batch_7_segmentation.png) |
+| | |
+|-|-|
+| ![Batch 4 - Boxes](data/results/batch_4_boxes.png) | ![Batch 4 - Segmentation](data/results/batch_4_segmentation.png) |
+| ![Batch 7 - Boxes](data/results/batch_7_boxes.png) | ![Batch 7 - Segmentation](data/results/batch_7_segmentation.png) |
 
 ---
 
