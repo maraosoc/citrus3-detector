@@ -2,7 +2,6 @@
 ## Detección y Conteo automático de Árboles Cítricos a partir de Imágenes Aéreas
 
 Este proyecto busca automatizar la identificación y conteo de **árboles de naranja y limón** en parcelas agrícolas usando imágenes adquiridas con **drones** y un **modelo de detección de objetos previamente entrenado**. Está desarrollado siguiendo la metodología **CRISP-DM**, y se enfoca en facilitar la toma de decisiones agronómicas aprovechando los desarrollos de la visión por computador.
-
 | | |
 |-|-|
 | ![Batch 4 - Boxes](data/results/batch_4_boxes.png) | ![Batch 4 - Segmentation](data/results/batch_4_segmentation.png) |
@@ -17,7 +16,7 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 - **Objetivo**: Automatizar el conteo y localización de árboles cítricos (naranja y limón) a partir de imágenes aéreas.
 - **Motivación**: Reducir tiempos y automatizar el monitoreo de cultivos. Permitir el análisis del terreno y facilitar tareas de inventario.
 - **Área de análisis**: 93 hectáreas, con presencia mayoritaria de cítricos y elementos adicionales como árboles nativos, viviendas, rocas y caminos.
-  
+
 ---
 
 ### 2. Comprensión de los Datos
@@ -29,8 +28,7 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 - **Contenido**:
   - Árboles cítricos (objetivo)
   - Elementos no relevantes para el problema: árboles nativos, casas, caminos, sombras
-- **Cobertura heterogénea**: Requiere filtrado cuidadoso post-inferencia.
-> Consulta algunas imagenes de prueba en formato `.tif` en la carpeta [Samples](data/samples)
+
 ---
 
 ## 🧩 Flujo de Modelado Propuesto
@@ -86,6 +84,7 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 
 ### 🧪 Estrategia de Evaluación
 - **Métricas**:
+  - Matriz de confusión a partir de IoU al 0.1
   - Precisión (Precision)
   - Exhaustividad (Recall)
   - F1-Score
@@ -124,7 +123,11 @@ citrus3-detector/
 │   │   │   └── tif_x4_res/
 │   ├── labels/ # Etiquetas rectangulares hechas en el conjunto de prueba en formato csv y json
 │   ├── results/ # Algunos resultados como segmentaciones, identificación de bounding boxes y filtrado de copas por mapa de elvación
-│   └── samples/ # Imágenes de ejemplo (.tif)
+│   │   │   └── predictions/ # Json y csv de las etiquetas predichas por el modelo
+│   ├── samples/ # Imágenes de ejemplo (.tif)
+│   └── shapefiles/ # Archivos .shp georreferenciados
+│   │   │   ├── Hard_Labels/ # Shapes de etiquetas hechas a mano
+│   │   │   ├── Predicted_Labels/ # Shapes de etiquetas predichas por el modelo en entrenamiento y prueba
 ├── models/ 
 │   └── modelo_rgb.joblib # Modelo k-NN en espacio de color RGB entrenado
 ├── notebooks/
