@@ -26,8 +26,40 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
 - **Generación de dataset**: Selección de áreas que cubran la heterogeneidad de las coberturas presentes.
   ![Diagrama](data/results/tran-test_data_generation.png)
 - **Contenido**:
-  - Árboles cítricos (objetivo)
-  - Elementos no relevantes para el problema: árboles nativos, casas, caminos, sombras
+   - Árboles cítricos (objetivo)
+   - Elementos no relevantes para el problema: árboles nativos, casas, caminos, sombras
+#### 🏷️ Etiquetas reales: 
+El proyecto cuenta con un conjunto de 2,094 anotaciones manuales realizadas sobre las áreas de Test, distribuidas en tres clases:
+   - 740 para árboles de limón
+   - 1,251 para árboles de naranja
+   - 103 para la clase "arbol", que incluye:
+      - Especies arbóreas que no son limón o naraja
+      - Individuos cuyo tipo (limón o naranja) no pudo determinarse con claridad.
+      - Árboles secos o muertos que aún conservan estructura visible.
+![Etiquetas](data\results\labels.png)
+Las etiquetas están disponibles en formato CSV, JSON y Shapefile, en las siguientes rutas:
+
+- CSV y JSON:
+   `data/labels/labels_tifname_porcentual.csv`
+   `data/labels/test-labels.json`
+
+- Shapefile:
+   `data\shapefiles\Hard_Labels`
+
+📄 **Ejemplo del archivo CSV**
+El archivo CSV contiene las coordenadas normalizadas de las cajas delimitadoras (entre 0-100), lo que permite escalarlas a cualquier resolución de imagen. A continuación, se muestra un ejemplo del csv:
+
+| image_path           | xmin   | ymin   | xmax   | ymax   | label  |
+|----------------------|--------|--------|--------|--------|--------|
+| database_batch_4.tif | 55.990 | 74.683 | 60.737 | 79.736 | Lemon  |
+| database_batch_7.tif | 36.290 |  6.161 | 42.207 | 12.145 | Orange |
+| database_batch_14.tif| 80.001 | 96.597 | 82.240 | 99.476 | Tree   |
+
+-  **Descripción de las columnas**
+   - `image_path`: Imagen a la que corresponde cada anotación. Encontradas en la ruta `data\database\test\tif_1x_res`
+   - `x_min`, `y_min`: Coordenadas normalizadas de la esquina superior izquierda del rectángulo
+   - `x_max`, `y_max`: Coordenadas normalizadas de la esquina inferior derecha del rectángulo
+   - `label`: Clase asignada: `Lemon`, `Orange` o `Tree` 
 
 ---
 
@@ -88,10 +120,21 @@ Este proyecto busca automatizar la identificación y conteo de **árboles de nar
   - Precisión (Precision)
   - Exhaustividad (Recall)
   - F1-Score
-  - Error absoluto en conteo
+  - Error absoluto en conteo absoluto (MAE) y porcentaul (% MAE)
 - **Evaluación espacial**:
-  - Visualización sobre QGIS para validación geoespacial.
+  - Visualización sobre QGIS para validación geoespacial. Las etiquetas predichas por el modelo las puedes encontrar en formato `csv` y `json` para los conjuntos de entrenamiento, validación y prueba en la carpeta `data\results\predictions` y en formato `shapefile` en la carpeta `data\shapefiles\Predicted_Labels`
 
+#### 📊 Resultados en el conjunto de prueba
+
+| Métrica     | Valor |
+|-------------|-------|
+| Precision   | 0.65  |
+| Recall      | 0.67  |
+| F1-Score    | 0.66  |
+| MAE         | 70.2  |
+| % MAE       | 31.2% |
+
+![Matriz de confusión](data/results/confusion_matrix_test.png)
 ---
 
 ### ⚙️ Entorno de Desarrollo
