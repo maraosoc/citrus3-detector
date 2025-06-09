@@ -36,7 +36,7 @@ El proyecto cuenta con un conjunto de 2,094 anotaciones manuales realizadas sobr
       - Especies arbóreas que no son limón o naraja
       - Individuos cuyo tipo (limón o naranja) no pudo determinarse con claridad.
       - Árboles secos o muertos que aún conservan estructura visible.
-![Etiquetas](data\results\labels.png)
+![Etiquetas](data/results/labels.png)
 Las etiquetas están disponibles en formato CSV, JSON y Shapefile, en las siguientes rutas:
 
 - CSV y JSON:
