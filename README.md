@@ -33,10 +33,11 @@ El proyecto cuenta con un conjunto de 2,094 anotaciones manuales realizadas sobr
    - 740 para árboles de limón
    - 1,251 para árboles de naranja
    - 103 para la clase "arbol", que incluye:
-      - Especies arbóreas que no son limón o naraja
+      - Especies arbóreas que no son limón o naraja.
       - Individuos cuyo tipo (limón o naranja) no pudo determinarse con claridad.
       - Árboles secos o muertos que aún conservan estructura visible.
 ![Etiquetas](data/results/labels.png)
+
 Las etiquetas están disponibles en formato CSV, JSON y Shapefile, en las siguientes rutas:
 
 - CSV y JSON:
@@ -44,7 +45,7 @@ Las etiquetas están disponibles en formato CSV, JSON y Shapefile, en las siguie
    `data/labels/test-labels.json`
 
 - Shapefile:
-   `data\shapefiles\Hard_Labels`
+   `data/shapefiles/Hard_Labels`
 
 📄 **Ejemplo del archivo CSV**
 El archivo CSV contiene las coordenadas normalizadas de las cajas delimitadoras (entre 0-100), lo que permite escalarlas a cualquier resolución de imagen. A continuación, se muestra un ejemplo del csv:
@@ -56,14 +57,14 @@ El archivo CSV contiene las coordenadas normalizadas de las cajas delimitadoras 
 | database_batch_14.tif| 80.001 | 96.597 | 82.240 | 99.476 | Tree   |
 
 -  **Descripción de las columnas**
-   - `image_path`: Imagen a la que corresponde cada anotación. Encontradas en la ruta `data\database\test\tif_1x_res`
+   - `image_path`: Imagen a la que corresponde cada anotación. Encontradas en la ruta `data/database/test/tif_1x_res`
    - `x_min`, `y_min`: Coordenadas normalizadas de la esquina superior izquierda del rectángulo
    - `x_max`, `y_max`: Coordenadas normalizadas de la esquina inferior derecha del rectángulo
    - `label`: Clase asignada: `Lemon`, `Orange` o `Tree` 
 
 ---
 
-## 🧩 Flujo de Modelado Propuesto
+## 🧩 Flujo de Modelado 
 1. **División en parches y extracción de características**
    - Cada imagen se divide en parches
    - Para cada parche se calculan estadísticas (histograma de color en RGB/HSV)
@@ -120,9 +121,9 @@ El archivo CSV contiene las coordenadas normalizadas de las cajas delimitadoras 
   - Precisión (Precision)
   - Exhaustividad (Recall)
   - F1-Score
-  - Error absoluto en conteo absoluto (MAE) y porcentaul (% MAE)
+  - Error absoluto en conteo absoluto (MAE) y porcentual (% MAE)
 - **Evaluación espacial**:
-  - Visualización sobre QGIS para validación geoespacial. Las etiquetas predichas por el modelo las puedes encontrar en formato `csv` y `json` para los conjuntos de entrenamiento, validación y prueba en la carpeta `data\results\predictions` y en formato `shapefile` en la carpeta `data\shapefiles\Predicted_Labels`
+  - Visualización sobre QGIS para validación geoespacial. Las etiquetas predichas por el modelo las puedes encontrar en formato `csv` y `json` para los conjuntos de entrenamiento, validación y prueba en la carpeta `data/results/predictions` y en formato `shapefile` en la carpeta `data/shapefiles/Predicted_Labels`
 
 #### 📊 Resultados en el conjunto de prueba
 
